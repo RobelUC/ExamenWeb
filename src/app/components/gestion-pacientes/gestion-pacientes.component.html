@@ -1,0 +1,57 @@
+<div class="container mt-5">
+  <h2 class="text-primary mb-4 text-center">Hospital Dr. Sano - Gestión de Aforo</h2>
+
+  <div class="row">
+    <div class="col-md-4 mb-4">
+      <div class="card shadow p-3">
+        <h5 class="card-title">Nuevo Ingreso ({{ ps.totalPacientes() }}/10)</h5>
+        <form [formGroup]="pacienteForm" (ngSubmit)="registrar()">
+          <input type="text" formControlName="nombreCompleto" class="form-control mb-2" placeholder="Nombre completo">
+          <input type="text" formControlName="dni" class="form-control mb-2" placeholder="DNI (8 dígitos)">
+          <input type="number" formControlName="edad" class="form-control mb-2" placeholder="Edad">
+          <select formControlName="seguroMedico" class="form-select mb-2">
+            <option value="">Tipo de Seguro...</option>
+            <option value="SIS">SIS</option>
+            <option value="EsSalud">EsSalud</option>
+            <option value="Privado">Privado</option>
+          </select>
+          <input type="date" formControlName="fechaIngreso" class="form-control mb-3">
+
+          <button type="submit" class="btn btn-success w-100" 
+                  [disabled]="pacienteForm.invalid || ps.totalPacientes() >= 10">
+            {{ ps.totalPacientes() >= 10 ? 'Aforo Completo' : 'Registrar Paciente' }}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="col-md-8">
+      <div class="table-responsive shadow rounded">
+        <table class="table table-hover bg-white mb-0">
+          <thead class="table-dark">
+            <tr>
+              <th>Nombre</th>
+              <th>DNI</th>
+              <th>Edad</th>
+              <th>Seguro</th>
+              <th>Acción</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (p of ps.pacientes(); track p.id) {
+              <tr>
+                <td>{{ p.nombreCompleto }}</td>
+                <td>{{ p.dni }}</td>
+                <td>{{ p.edad }}</td>
+                <td>{{ p.seguroMedico }}</td>
+                <td><button (click)="ps.eliminarPaciente(p.id)" class="btn btn-danger btn-sm">Alta</button></td>
+              </tr>
+            } @empty {
+              <tr><td colspan="5" class="text-center">No hay pacientes en el hospital.</td></tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</div>
